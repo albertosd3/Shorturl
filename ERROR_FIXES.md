@@ -1,6 +1,6 @@
 # Solusi Error - Short URL Manager
 
-## ❌ Error yang Terjadi
+## ❌ Error #1: Class "Str" not found (FIXED ✅)
 
 ```
 In database.php line 38:
@@ -8,6 +8,35 @@ Class "Str" not found
 
 Script @php artisan package:discover --ansi handling the post-autoload-dump event returned with error code 1
 ```
+
+### Solusi:
+**File: `config/database.php`**
+- Tambahkan `use Illuminate\Support\Str;` di awal file
+
+**File: `config/session.php`**
+- Tambahkan `use Illuminate\Support\Str;` di awal file
+
+**File: `app/Providers/RouteServiceProvider.php`**
+- Tambahkan `use Illuminate\Cache\RateLimiting\Limit;`
+
+---
+
+## ❌ Error #2: bootstrap/cache directory not found (FIXED ✅)
+
+```
+The /home/forge/cs02.online/releases/57921793/bootstrap/cache directory must be present and writable.
+```
+
+### Penyebab:
+Laravel Forge deployment membutuhkan folder `bootstrap/cache` untuk caching configuration.
+
+### Solusi:
+1. ✅ Created `bootstrap/cache/` directory
+2. ✅ Added `bootstrap/cache/.gitignore` file
+3. ✅ Updated main `.gitignore` to preserve directory structure
+4. ✅ Created deployment script dengan automatic directory creation
+
+---
 
 ## ✅ Perbaikan yang Sudah Dilakukan
 
