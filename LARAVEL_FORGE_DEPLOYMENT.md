@@ -1,3 +1,16 @@
+## Quick Forge checklist
+
+Before deploying on Laravel Forge, ensure the following are done:
+
+- Repository is pushed to Git and connected to Forge
+- `bootstrap/cache` and `storage` directories exist (or deployment script creates them)
+- `.env` on the server is configured (set DB to sqlite or a production DB, set STOPBOT keys, ADMIN_PASSWORD_HASH)
+- Required PHP extensions installed on the server (pdo_sqlite if using SQLite)
+- Composer and PHP are available on the server (Forge provides these by default)
+- Deploy script (provided) runs `composer install`, creates sqlite file if missing, runs migrations and caches config
+
+---
+
 # Laravel Forge Deployment - Error Fix & Guide# Laravel Forge Deployment Readiness Assessment
 
 

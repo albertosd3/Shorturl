@@ -1,30 +1,67 @@
-cd /home/forge/cs02.online
-git pull origin main
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Install/Update Composer dependencies
-composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+# Deployment script for Laravel Forge (robust + idempotent)
+APP_DIR=${1:-/home/forge/cs02.online}
+cd "$APP_DIR"
 
-# Clear and cache config
-php artisan config:clear
-php artisan config:cache
+echo "Deploying to: $APP_DIR"
 
-# Clear and cache routes  
-php artisan route:clear
-php artisan route:cache
+# Pull latest
+git pull origin ${FORGE_SITE_BRANCH:-main}
 
-# Clear and cache views
-php artisan view:clear
-php artisan view:cache
+# Use Forge-provided composer/php when available
+COMPOSER_CMD="${FORGE_COMPOSER:-composer}"
+PHP_CMD="${FORGE_PHP:-php}"
+PHP_FPM_SERVICE="${FORGE_PHP_FPM:-php8.3-fpm}"
 
-# Run database migrations
-php artisan migrate --force
+echo "Using composer: $COMPOSER_CMD"
+echo "Using php: $PHP_CMD"
 
-# Restart PHP-FPM
-( flock -w 10 9 || exit 1
-    echo 'Restarting FPM...'; sudo -S service php8.3-fpm reload ) 9>/tmp/fpmlock
+# Ensure necessary directories exist
+mkdir -p bootstrap/cache
+mkdir -p storage/framework/{sessions,views,cache}
+mkdir -p storage/logs
+mkdir -p database
 
-# Clear Laravel cache
-php artisan cache:clear
+# Ensure sqlite file exists (if using sqlite)
+if [ "${DB_CONNECTION:-sqlite}" = "sqlite" ]; then
+    if [ ! -f database/database.sqlite ]; then
+        touch database/database.sqlite
+        chmod 664 database/database.sqlite || true
+    fi
+fi
 
-# Restart Queue Workers (if using queues)
-# php artisan queue:restart
+# Fix permissions (best effort)
+if command -v sudo >/dev/null 2>&1; then
+    sudo chown -R forge:forge "$APP_DIR" || true
+fi
+chmod -R 775 storage bootstrap/cache || true
+
+# Install/update composer dependencies
+"$COMPOSER_CMD" install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+
+# Clear caches and rebuild
+"$PHP_CMD" artisan config:clear || true
+"$PHP_CMD" artisan config:cache
+
+"$PHP_CMD" artisan route:clear || true
+"$PHP_CMD" artisan route:cache
+
+"$PHP_CMD" artisan view:clear || true
+"$PHP_CMD" artisan view:cache
+
+# Run migrations
+"$PHP_CMD" artisan migrate --force || true
+
+# Try to reload PHP-FPM if available
+if command -v sudo >/dev/null 2>&1; then
+    if sudo service --status-all >/dev/null 2>&1; then
+        echo "Reloading PHP-FPM ($PHP_FPM_SERVICE)"
+        sudo service "$PHP_FPM_SERVICE" reload || true
+    fi
+fi
+
+"$PHP_CMD" artisan cache:clear || true
+
+echo "Deployment finished successfully."
