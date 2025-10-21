@@ -36,18 +36,35 @@ composer --version # Harus menampilkan Composer version
 
 ## 🚀 Quick Start (Windows)
 
-### Cara Termudah - Gunakan Script Otomatis:
+### Prerequisites - Install These First:
+
+1. **PHP 8.1+**: Download from https://windows.php.net/download/ atau XAMPP
+2. **Composer**: Download from https://getcomposer.org/download/
+3. **Git** (untuk deployment): Download from https://git-scm.com/download/win
+
+### Local Development - Cara Termudah:
 
 1. **Double-click `setup.bat`**
-   - Script akan mengecek PHP & Composer
-   - Otomatis install dependencies
-   - Setup database
+   - Checks PHP & Composer
+   - Installs dependencies
+   - Sets up database
 
 2. **Double-click `start.bat`**
-   - Server akan berjalan otomatis
-   - Buka browser ke http://localhost:8000
+   - Starts development server
+   - Opens http://localhost:8000
 
-### Cara Manual:
+### Deploy ke Laravel Forge:
+
+1. **Double-click `git-setup.bat`**
+   - Initializes Git repository
+   - Creates initial commit
+   - Guides you through GitHub setup
+
+2. **Follow `GIT_SETUP_GUIDE.md`**
+   - Complete Laravel Forge setup
+   - Deploy to production
+
+### Manual Setup:
 
 ```powershell
 # 1. Install dependencies
