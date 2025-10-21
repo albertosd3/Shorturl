@@ -5,6 +5,69 @@
 
 A modern, elegant short URL application built with Laravel PHP 8.4 and SQLite. Features a dark, classy UI design with comprehensive visitor analytics and link rotation capabilities.
 
+## ⚠️ PENTING - Instalasi untuk Windows
+
+**Sebelum menjalankan aplikasi, Anda HARUS menginstall:**
+
+### 1. Install PHP (pilih salah satu):
+
+**Opsi A - XAMPP (Recommended untuk pemula):**
+- Download: https://www.apachefriends.org/download.html
+- Install XAMPP
+- Tambahkan `C:\xampp\php` ke PATH environment variable
+
+**Opsi B - PHP Standalone:**
+- Download: https://windows.php.net/download/
+- Extract ke `C:\php`
+- Rename `php.ini-development` → `php.ini`
+- Enable extensions: curl, fileinfo, mbstring, openssl, pdo_sqlite, sqlite3
+- Tambahkan `C:\php` ke PATH environment variable
+
+### 2. Install Composer:
+- Download: https://getcomposer.org/download/
+- Install Composer-Setup.exe
+- Restart terminal setelah instalasi
+
+### 3. Verifikasi Instalasi:
+```powershell
+php --version     # Harus menampilkan PHP 8.x
+composer --version # Harus menampilkan Composer version
+```
+
+## 🚀 Quick Start (Windows)
+
+### Cara Termudah - Gunakan Script Otomatis:
+
+1. **Double-click `setup.bat`**
+   - Script akan mengecek PHP & Composer
+   - Otomatis install dependencies
+   - Setup database
+
+2. **Double-click `start.bat`**
+   - Server akan berjalan otomatis
+   - Buka browser ke http://localhost:8000
+
+### Cara Manual:
+
+```powershell
+# 1. Install dependencies
+composer install
+
+# 2. Generate application key
+php artisan key:generate
+
+# 3. Run migrations
+php artisan migrate
+
+# 4. Start server
+php artisan serve
+```
+
+## 🔐 Login
+
+- URL: http://localhost:8000/login
+- **Password: G666**
+
 ## Features
 
 ### 🔗 URL Management
